@@ -1,0 +1,65 @@
+package com.mywatertracker
+
+
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Bundle
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+
+class MainActivity : AppCompatActivity() {
+
+    private val NOTIFICATION_PERMISSION_CODE = 123
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        checkPermissionAndStartService()
+
+        val btnDrinkWater = findViewById<Button>(R.id.btnDrinkWater)
+        btnDrinkWater.setOnClickListener {
+            addWater()
+        }
+    }
+
+    private fun checkPermissionAndStartService() {
+        // Step 7: Request notification permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), NOTIFICATION_PERMISSION_CODE)
+            } else {
+                startWaterService()
+            }
+        } else {
+            startWaterService()
+        }
+    }
+
+    // Step 7 & 12: Function to start the service
+    private fun startWaterService() {
+        val serviceIntent = Intent(this, WaterService::class.java)
+        ContextCompat.startForegroundService(this, serviceIntent)
+    }
+
+    // Step 14: Notify service to increment water level by 250ml
+    private fun addWater() {
+        val serviceIntent = Intent(this, WaterService::class.java)
+        serviceIntent.putExtra(WaterService.EXTRA_WATER_ADD, 250.0)
+        startService(serviceIntent)
+    }
+
+    // Handle permission result
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == NOTIFICATION_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startWaterService()
+            }
+        }
+    }
+}
