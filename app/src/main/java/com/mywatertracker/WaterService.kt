@@ -33,7 +33,7 @@ class WaterService : Service() {
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, createNotification()) // Step 7: Start Foreground Service
 
-        // Step 8: Decrease water level by 0.144ml every 5 seconds
+
         runnable = object : Runnable {
             override fun run() {
                 waterLevel -= 0.144
@@ -54,7 +54,7 @@ class WaterService : Service() {
         return START_STICKY
     }
 
-    // Step 6: Set up notification creation
+
     private fun createNotification(): Notification {
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(

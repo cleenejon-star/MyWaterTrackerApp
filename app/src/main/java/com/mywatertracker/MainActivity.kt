@@ -1,6 +1,5 @@
 package com.mywatertracker
 
-
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Step 7 & 12: Function to start the service
+
     private fun startWaterService() {
         val serviceIntent = Intent(this, WaterService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         startService(serviceIntent)
     }
 
-    // Handle permission result
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == NOTIFICATION_PERMISSION_CODE) {
