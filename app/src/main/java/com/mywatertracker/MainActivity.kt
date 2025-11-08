@@ -4,6 +4,7 @@ package com.mywatertracker
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.util.Log
 import android.os.Build
 import android.os.Bundle
 import android.widget.Button
@@ -46,8 +47,9 @@ class MainActivity : AppCompatActivity() {
         ContextCompat.startForegroundService(this, serviceIntent)
     }
 
-    // Step 14: Notify service to increment water level by 250ml
     private fun addWater() {
+        Log.d("MainActivity", "Button clicked! Sending 250ml.") // <-- ADD THIS LINE
+
         val serviceIntent = Intent(this, WaterService::class.java)
         serviceIntent.putExtra(WaterService.EXTRA_WATER_ADD, 250.0)
         startService(serviceIntent)
